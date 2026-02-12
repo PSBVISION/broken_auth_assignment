@@ -110,15 +110,15 @@ app.post("/auth/verify-otp", (req, res) => {
 
 app.post("/auth/token", (req, res) => {
   try {
-    const token = req.headers.authorization;
+    const sessionId = req.cookies.session_token;
 
-    if (!token) {
+    if (!sessionId) {
       return res
         .status(401)
         .json({ error: "Unauthorized - valid session required" });
     }
 
-    const session = loginSessions[token.replace("Bearer ", "")];
+    const session = loginSessions[sessionId];
 
     if (!session) {
       return res.status(401).json({ error: "Invalid session" });
@@ -130,7 +130,7 @@ app.post("/auth/token", (req, res) => {
     const accessToken = jwt.sign(
       {
         email: session.email,
-        sessionId: token,
+        sessionId: sessionId,
       },
       secret,
       {
