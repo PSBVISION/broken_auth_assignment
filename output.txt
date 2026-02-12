@@ -1,0 +1,21 @@
+===== TASK 1: LOGIN =====
+$ curl -X POST http://localhost:3000/auth/login -H "Content-Type: application/json" -d '{"email":"your_email@example.com","password":"password123"}'
+
+{"message":"OTP sent","loginSessionId":"sw0k1c"}
+
+Server Console Log: [OTP] Session sw0k1c generated, OTP: 422459
+
+===== TASK 2: VERIFY OTP =====
+$ curl -c cookies.txt -X POST http://localhost:3000/auth/verify-otp -H "Content-Type: application/json" -d '{"loginSessionId":"sw0k1c","otp":"422459"}'
+
+{"message":"OTP verified","sessionId":"sw0k1c"}
+
+===== TASK 3: GET TOKEN =====
+$ curl -b cookies.txt -X POST http://localhost:3000/auth/token
+
+{"access_token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InlvdXJfZW1haWxAZXhhbXBsZS5jb20iLCJzZXNzaW9uSWQiOiJzdzBrMWMiLCJpYXQiOjE3NzA4OTAwMTIsImV4cCI6MTc3MDg5MDkxMn0.IG9UmmHfkxkVyMuiY8KOkmJe6m82UlbGdxcDkgUcDsw","expires_in":900}
+
+===== TASK 4: ACCESS PROTECTED ROUTE =====
+$ curl -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InlvdXJfZW1haWxAZXhhbXBsZS5jb20iLCJzZXNzaW9uSWQiOiJzdzBrMWMiLCJpYXQiOjE3NzA4OTAwMTIsImV4cCI6MTc3MDg5MDkxMn0.IG9UmmHfkxkVyMuiY8KOkmJe6m82UlbGdxcDkgUcDsw" http://localhost:3000/protected
+
+{"message":"Access granted","user":{"email":"your_email@example.com","sessionId":"sw0k1c","iat":1770890012,"exp":1770890912},"success_flag":"FLAG-eW91cl9lbWFpbEBleGFtcGxlLmNvbV9DT01QTEVURURfQVNTSUdOTUVOVA=="}
